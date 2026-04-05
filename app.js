@@ -267,8 +267,8 @@ document.addEventListener("DOMContentLoaded", () => {
         root.style.setProperty('--bg-color-1', era.colors[0]);
         root.style.setProperty('--bg-color-2', era.colors[1]);
 
-        // Match background circle color to era for a nicer effect, shrinking arc becomes white
-        circleBg.style.stroke = era.colors[1];
+        // Remove base color completely, leaving a beautifully minimalist floating white arc over the gradient
+        circleBg.style.stroke = "transparent";
         circle.style.stroke = "rgba(255, 255, 255, 0.9)";
     }
 
