@@ -138,6 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const slider = document.getElementById("daySlider");
     const daysLabelVal = document.getElementById("days-left-val");
     const circle = document.getElementById("progress-circle");
+    const circleBg = document.querySelector(".progress-ring__circle-bg");
     const radius = circle.r.baseVal.value;
     const circumference = radius * 2 * Math.PI;
 
@@ -151,7 +152,6 @@ document.addEventListener("DOMContentLoaded", () => {
     let audioFetchTimeout;
 
     circle.style.strokeDasharray = `${circumference} ${circumference}`;
-    circle.style.strokeDashoffset = 0; // Lock to always full
 
     // Audio Player interactions
     playBtn.addEventListener("click", () => {
@@ -181,8 +181,9 @@ document.addEventListener("DOMContentLoaded", () => {
         // Update number
         daysLabelVal.textContent = days;
 
-        // Keep the circle progress consistently bold and 100% full so it never greys out
-        circle.style.strokeDashoffset = 0;
+        // Restore actual progress depletion based on days!
+        const offset = circumference - (days / 100) * circumference;
+        circle.style.strokeDashoffset = offset;
 
         // Get song mapped to this specific "days left" index
         // Array index 0 is Day 100, index 99 is Day 1 (or Day 0).
@@ -266,8 +267,9 @@ document.addEventListener("DOMContentLoaded", () => {
         root.style.setProperty('--bg-color-1', era.colors[0]);
         root.style.setProperty('--bg-color-2', era.colors[1]);
 
-        // Match progress circle color to era for a nicer effect
-        circle.style.stroke = era.colors[1];
+        // Match background circle color to era for a nicer effect, shrinking arc becomes white
+        circleBg.style.stroke = era.colors[1];
+        circle.style.stroke = "rgba(255, 255, 255, 0.9)";
     }
 
     slider.addEventListener("input", (e) => {
