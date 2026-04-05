@@ -45,9 +45,16 @@ const eras = {
     }
 };
 
-function seededRandom(seed) {
-    var x = Math.sin(seed) * 10000;
-    return x - Math.floor(x);
+// Simple integer LCG PRNG for exact mathematical parity across iOS/Android/Windows CPUS
+function seededRandomLCG(seed) {
+    let m = 0x80000000;
+    let a = 1103515245;
+    let c = 12345;
+    let state = seed;
+    return function() {
+        state = (a * state + c) % m;
+        return state / (m - 1);
+    }
 }
 
 const songsList = [
@@ -74,8 +81,8 @@ const songsList = [
 ];
 
 // Provide a fixed random order for the 100 standard songs 
-let seed = 42;
-const mapped = songsList.map(song => ({ song: song, sortVal: seededRandom(seed++) }));
+let randGen = seededRandomLCG(42);
+const mapped = songsList.map(song => ({ song: song, sortVal: randGen() }));
 mapped.sort((a, b) => a.sortVal - b.sortVal);
 songsList.length = 0;
 mapped.forEach(x => songsList.push(x.song));
@@ -206,8 +213,7 @@ document.addEventListener("DOMContentLoaded", () => {
         audioPlayer.pause();
         audioPlayer.src = "";
         playIconPath.setAttribute("d", "M8 5v14l11-7z");
-        playBtn.style.opacity = "0.4";
-        playBtn.style.pointerEvents = "none";
+        // Opacity left at default so it never fades!
 
         const amBtn = document.getElementById('apple-music-btn');
 
@@ -233,8 +239,6 @@ document.addEventListener("DOMContentLoaded", () => {
             .then(data => {
                 if (data.results && data.results.length > 0 && data.results[0].previewUrl) {
                     audioPlayer.src = data.results[0].previewUrl;
-                    playBtn.style.opacity = "1";
-                    playBtn.style.pointerEvents = "auto";
                 }
             })
             .catch(e => console.error('Failed to fetch preview url from Apple Music:', e));
