@@ -151,6 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let audioFetchTimeout;
 
     circle.style.strokeDasharray = `${circumference} ${circumference}`;
+    circle.style.strokeDashoffset = 0; // Lock to always full
 
     // Audio Player interactions
     playBtn.addEventListener("click", () => {
@@ -180,10 +181,8 @@ document.addEventListener("DOMContentLoaded", () => {
         // Update number
         daysLabelVal.textContent = days;
 
-        // Update circle progress (percentage out of 100)
-        // If days=88, we want it 88% full
-        const offset = circumference - (days / 100) * circumference;
-        circle.style.strokeDashoffset = offset;
+        // Keep the circle progress consistently bold and 100% full so it never greys out
+        circle.style.strokeDashoffset = 0;
 
         // Get song mapped to this specific "days left" index
         // Array index 0 is Day 100, index 99 is Day 1 (or Day 0).
