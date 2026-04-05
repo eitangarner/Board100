@@ -114,7 +114,7 @@ function getEraForSong(title) {
 const finalSongs = songsList;
 
 document.addEventListener("DOMContentLoaded", () => {
-    const targetDate = new Date("2026-05-05T00:00:00+03:00");
+    const targetDate = new Date("2026-07-02T00:00:00+03:00");
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
