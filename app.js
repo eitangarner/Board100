@@ -75,7 +75,10 @@ const songsList = [
 
 // Provide a fixed random order for the 100 standard songs 
 let seed = 42;
-songsList.sort((a, b) => seededRandom(seed++) - 0.5);
+const mapped = songsList.map(song => ({ song: song, sortVal: seededRandom(seed++) }));
+mapped.sort((a, b) => a.sortVal - b.sortVal);
+songsList.length = 0;
+mapped.forEach(x => songsList.push(x.song));
 
 // Add 'Long Live' exactly at the 101st position, corresponding to index 100 for "Day 0".
 songsList.push("Long Live (Taylor's Version)");
